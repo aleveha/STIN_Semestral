@@ -15,5 +15,5 @@ export async function getExchangeRates(): Promise<string> {
 }
 
 export async function parceExchangeRatesData(data: ExchangeRate): Promise<string> {
-	return data.rates ? data.rates.CZK.toString() : "Exchange rate API error";
+	return data.rates ? data.rates.CZK.toFixed(2).toString() : "Exchange rate API error";
 }

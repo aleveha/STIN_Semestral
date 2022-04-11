@@ -35,7 +35,7 @@ export async function nameHandler(ctx: TextContext): Promise<void> {
 export async function currencyHandler(ctx: TextContext): Promise<void> {
 	const currency = await getExchangeRates();
 	const date = await getDateString();
-	await ctx.reply(`*${date.replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency}*`, {
+	await ctx.reply(`*${date.replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency.replaceAll(".", "\\.")}*`, {
 		parse_mode: "MarkdownV2",
 	});
 }
