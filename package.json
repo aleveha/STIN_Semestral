@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "dev": "nodemon ./src/main.ts",
-    "start": "node ./build/main.js",
+    "dev": "NODE_ENV=local nodemon ./src/main.ts",
+    "start": "NODE_ENV=production node ./build/main.js",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },

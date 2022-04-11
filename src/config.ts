@@ -3,10 +3,16 @@ import { exit } from "process";
 import { Context, Telegraf } from "telegraf";
 import { Update } from "typegram";
 
-type IStage = "prod" | "local";
+type IStage = "production" | "local";
 
-export const STAGE: IStage = (process.env.STAGE as IStage) ?? "local";
-export const TELEGRAM_TOKEN: string = (STAGE === "prod" ? (process.env.TELEGRAM_TOKEN as string) : (process.env.TELEGRAM_TOKEN_DEV as string)) ?? "";
+export const STAGE: IStage | undefined = process.env.NODE_ENV as IStage;
+if (!STAGE) {
+	console.error("NODE_ENV is not defined");
+	exit();
+}
+
+export const TELEGRAM_TOKEN: string =
+	(STAGE === "production" ? (process.env.TELEGRAM_TOKEN as string) : (process.env.TELEGRAM_TOKEN_DEV as string)) ?? "";
 if (TELEGRAM_TOKEN === "") {
 	console.log("Telegram token is required!");
 	exit();
