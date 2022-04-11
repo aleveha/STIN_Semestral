@@ -1,18 +1,19 @@
-import axios from "axios";
+import { EXCHANGE_RATE_API, ExchangeRate } from "./exchange-rate-api";
+import { EXCHANGE_TOKEN } from "./config";
 
 export async function getDateString(): Promise<string> {
 	return new Date().toLocaleString("ru");
 }
 
-export async function getCurrency(): Promise<string> {
-	const url = "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
-	const currencyData = await axios.get(url);
-	return await parceCurrencyData(currencyData.data);
+export async function fetchExchangeRateApi(): Promise<ExchangeRate> {
+	return (await EXCHANGE_RATE_API.get<ExchangeRate>("/latest", { params: { base: "EUR", access_key: EXCHANGE_TOKEN } })).data;
 }
 
-async function parceCurrencyData(data: string): Promise<string> {
-	return data
-		.split("\n")
-		.filter(line => line.includes("EUR"))[0]
-		.split("|")[4];
+export async function getExchangeRates(): Promise<string> {
+	const currencyData = await fetchExchangeRateApi();
+	return await parceExchangeRatesData(currencyData);
+}
+
+export async function parceExchangeRatesData(data: ExchangeRate): Promise<string> {
+	return data.rates ? data.rates.CZK.toString() : "Exchange rate API error";
 }

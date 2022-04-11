@@ -1,5 +1,5 @@
 import { TextContext } from "./types";
-import { getCurrency, getDateString } from "./utils";
+import { getExchangeRates, getDateString } from "./utils";
 
 export async function startHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply("Zdravím! Jsem bot, který něco umí 🙃");
@@ -33,7 +33,7 @@ export async function nameHandler(ctx: TextContext): Promise<void> {
 }
 
 export async function currencyHandler(ctx: TextContext): Promise<void> {
-	const currency = await getCurrency();
+	const currency = await getExchangeRates();
 	const date = await getDateString();
 	await ctx.reply(`*${date.replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency}*`, {
 		parse_mode: "MarkdownV2",
