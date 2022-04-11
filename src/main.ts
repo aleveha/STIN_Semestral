@@ -1,4 +1,4 @@
-import { BOT, STAGE } from "./config";
+import { BOT, STAGE, TELEGRAM_TOKEN } from "./config";
 import { startHandler, helpHandler, infoHandler, nameHandler, currencyHandler, timeHandler } from "./handlers";
 
 async function registerHandlers(): Promise<void> {
@@ -11,7 +11,9 @@ async function registerHandlers(): Promise<void> {
 }
 
 async function launchBot(): Promise<void> {
-	STAGE === "local" ? await BOT.launch() : await BOT.launch();
+	STAGE === "local"
+		? await BOT.launch()
+		: await BOT.launch({ webhook: { domain: "https://stin-bot.herokuapp.com", hookPath: `/bot${TELEGRAM_TOKEN}` } });
 }
 
 async function main(): Promise<void> {

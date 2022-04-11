@@ -26,6 +26,3 @@ jobs:
                   heroku_api_key: ${{secrets.HEROKU_API_KEY}}
                   heroku_app_name: "stin-bot"
                   heroku_email: "nikita.tashilin@gmail.com"
-              env:
-                  NODE_ENV: "production"
-                  env_file: /.env
