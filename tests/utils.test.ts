@@ -27,7 +27,7 @@ describe("Get exchange rates", () => {
 				},
 			};
 			const data = await parceExchangeRatesData(inputData);
-			expect(data).toBe("24.369617");
+			expect(data).toBe("24.37");
 		});
 
 		test("API success false", async () => {
