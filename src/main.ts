@@ -11,7 +11,7 @@ async function registerHandlers(): Promise<void> {
 }
 
 async function launchBot(): Promise<void> {
-	STAGE === "local" ? await BOT.launch() : await BOT.launch({ webhook: {} });
+	STAGE === "local" ? await BOT.launch() : await BOT.launch();
 }
 
 async function main(): Promise<void> {
