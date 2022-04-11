@@ -8,6 +8,14 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "rootDir": "src",
-    "outDir": "out"
-  }
+    "outDir": "build"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "tests",
+    "coverage"
+  ]
 }
