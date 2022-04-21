@@ -1,4 +1,4 @@
-import { BOT } from "./config";
+import { BOT, STAGE } from "./config";
 import { startHandler, helpHandler, infoHandler, nameHandler, currencyHandler, timeHandler } from "./handlers";
 
 async function registerHandlers(): Promise<void> {
@@ -12,7 +12,13 @@ async function registerHandlers(): Promise<void> {
 
 async function main(): Promise<void> {
 	await registerHandlers();
-	await BOT.launch();
+	STAGE === "production" ? await BOT.launch({
+		webhook: {
+			domain: "https://stin-bot.herokuapp.com",
+			host: "127.0.0.1",
+			port: 8443,
+		},
+	}) : await BOT.launch();
 }
 
 main();
