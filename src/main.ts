@@ -15,7 +15,7 @@ async function startWebhook(): Promise<void> {
 	await BOT.launch({
 		webhook: {
 			domain: "https://stin-bot.herokuapp.com",
-			host: `/${TELEGRAM_TOKEN}`,
+			hookPath: `/${TELEGRAM_TOKEN}`,
 		},
 	});
 }
