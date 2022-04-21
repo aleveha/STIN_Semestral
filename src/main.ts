@@ -11,10 +11,11 @@ async function registerHandlers(): Promise<void> {
 }
 
 async function startWebhook(): Promise<void> {
-	await BOT.telegram.setWebhook("https://stin-bot.herokuapp.com");
 	await BOT.launch({
 		webhook: {
 			domain: "https://stin-bot.herokuapp.com",
+			host: "0.0.0.0",
+			port: 5000,
 		},
 	});
 }
