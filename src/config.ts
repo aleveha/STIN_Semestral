@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { Context, Telegraf } from "telegraf";
 import { Update } from "typegram";
+import { Pool } from "pg";
 
 type IStage = "production" | "local";
 
@@ -20,3 +21,14 @@ export const EXCHANGE_TOKEN: string = process.env.EXCHANGE_TOKEN ?? "";
 if (EXCHANGE_TOKEN === "") {
 	throw new Error("Exchange token is required!");
 }
+
+export const DB_CLIENT = new Pool({
+	host: process.env.DB_HOST ?? "localhost",
+	port: 5432,
+	user: process.env.DB_USER ?? "postgres",
+	password: process.env.DB_PASSWORD ?? "",
+	database: process.env.DB_NAME ?? "postgres",
+	ssl: {
+		rejectUnauthorized: false
+	}
+});

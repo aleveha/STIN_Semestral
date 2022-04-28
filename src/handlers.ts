@@ -1,5 +1,6 @@
 import { TextContext } from "./types";
-import { getExchangeRates, getDateString } from "./utils";
+import { getDateString, getExchangeRates } from "./utils";
+import { getExchangeRateHistory, saveExchangeRate } from "./database";
 
 export async function startHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply("Zdravím! Jsem bot, který něco umí 🙃");
@@ -13,7 +14,8 @@ export async function helpHandler(ctx: TextContext): Promise<void> {
 		"/help — zobrazí tuto nápovědu\n" +
 		"/info — zobrazí informace o botovi\n" +
 		"/name — zobrazí moje jméno\n" +
-		"/currency — zobrazuje aktuální kurz eura podle ČNB\n" +
+		"/currency — zobrazuje aktuální kurz eura\n" +
+		"/currencyHistory — zobrazuje historii kurzu eura\n" +
 		"/time — zobrazí aktuální čas\n";
 	await ctx.reply(helpText);
 }
@@ -38,6 +40,7 @@ export async function currencyHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply(`*${date.replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency.replaceAll(".", "\\.")}*`, {
 		parse_mode: "MarkdownV2",
 	});
+	await saveExchangeRate(currency);
 }
 
 export async function timeHandler(ctx: TextContext): Promise<void> {
@@ -45,4 +48,9 @@ export async function timeHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply(`Aktuální čas serveru je: *${date.replaceAll(".", "\\.")}*`, {
 		parse_mode: "MarkdownV2",
 	});
+}
+
+export async function currencyHistoryHandler(ctx: TextContext): Promise<void> {
+	const history = await getExchangeRateHistory();
+	await ctx.reply(history.map(value => `${value.date.toLocaleDateString("ru")} — ${value.exchange_rate}`).join("\n"));
 }
