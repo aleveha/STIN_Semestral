@@ -1,5 +1,14 @@
 import { BOT, DB_CLIENT, STAGE, TELEGRAM_TOKEN } from "./config";
-import { currencyHandler, currencyHistoryHandler, helpHandler, infoHandler, nameHandler, startHandler, timeHandler } from "./handlers";
+import {
+	currencyHandler,
+	currencyHistoryHandler,
+	helpHandler,
+	infoHandler,
+	nameHandler,
+	startHandler,
+	timeHandler,
+	wrongMessageHandler,
+} from "./handlers";
 
 async function registerHandlers(): Promise<void> {
 	BOT.start(async ctx => await startHandler(ctx));
@@ -9,6 +18,7 @@ async function registerHandlers(): Promise<void> {
 	BOT.command("currency", async ctx => await currencyHandler(ctx));
 	BOT.command("currencyHistory", async ctx => await currencyHistoryHandler(ctx));
 	BOT.command("time", async ctx => await timeHandler(ctx));
+	BOT.on("message", async ctx => await wrongMessageHandler(ctx));
 }
 
 async function startWebhook(): Promise<void> {

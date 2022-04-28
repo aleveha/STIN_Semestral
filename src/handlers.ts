@@ -1,4 +1,4 @@
-import { TextContext } from "./types";
+import { MessageContext, TextContext } from "./types";
 import { getDateString, getExchangeRates } from "./utils";
 import { getExchangeRateHistory, saveExchangeRate } from "./database";
 
@@ -53,4 +53,8 @@ export async function timeHandler(ctx: TextContext): Promise<void> {
 export async function currencyHistoryHandler(ctx: TextContext): Promise<void> {
 	const history = await getExchangeRateHistory();
 	await ctx.reply(history.map(value => `${value.date.toLocaleDateString("ru")} — ${value.exchange_rate}`).join("\n"));
+}
+
+export async function wrongMessageHandler(ctx: MessageContext): Promise<void> {
+	await ctx.reply("Moc nerozumím...");
 }
