@@ -6,10 +6,10 @@ interface ExchangeRate {
 	date: Date;
 }
 
-export async function saveExchangeRate(exchangeRate: string): Promise<void> {
+export async function saveExchangeRate(exchangeRate: string, date?: Date): Promise<void> {
 	await DB_CLIENT.query<ExchangeRate>(
 		"insert into exchange_rate(exchange_rate, date) values ($1, $2) on conflict (date) do nothing",
-		[exchangeRate, new Date()],
+		[exchangeRate, date ?? new Date()]
 	);
 }
 
