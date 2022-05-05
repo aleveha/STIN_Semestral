@@ -20,6 +20,10 @@ jobs:
                   TELEGRAM_TOKEN: ${{secrets.TELEGRAM_TOKEN}}
                   EXCHANGE_TOKEN: ${{secrets.EXCHANGE_TOKEN}}
                   NODE_ENV: ${{secrets.NODE_ENV}}
+                  DB_HOST: ${{secrets.DB_HOST}}
+                  DB_NAME: ${{secrets.DB_NAME}}
+                  DB_USER: ${{secrets.DB_USER}}
+                  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
     deploy:
         runs-on: ubuntu-latest
         needs: [ build ]
