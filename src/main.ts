@@ -9,6 +9,7 @@ import {
 	timeHandler,
 	wrongMessageHandler,
 } from "./handlers";
+import { startExchangeRateToHistoryScheduler } from "./utils";
 
 async function registerHandlers(): Promise<void> {
 	BOT.start(async ctx => await startHandler(ctx));
@@ -37,6 +38,8 @@ async function main(): Promise<void> {
 	await registerHandlers();
 	STAGE === "production" ? await startWebhook() : await BOT.launch();
 	console.log(`Bot has been started on stage: ${STAGE}`);
+	await startExchangeRateToHistoryScheduler();
+	console.log("Exchange rate scheduler has been started");
 }
 
 main();

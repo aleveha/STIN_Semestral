@@ -1,5 +1,7 @@
-import { getExchangeRates, getDateString, parceExchangeRatesData, fetchExchangeRateApi } from "../src/utils";
+import { fetchExchangeRateApi, getDateString, getExchangeRates, parceExchangeRatesData, startExchangeRateToHistoryScheduler } from "../src/utils";
 import { ExchangeRate } from "../src/exchange-rate-api";
+
+jest.mock("../src/utils");
 
 test("Get date string", async () => {
 	const data = await getDateString();
@@ -48,4 +50,9 @@ describe("Get exchange rates", () => {
 		const data = await getExchangeRates();
 		expect(data).toMatch(/[1-9][0-9]\.[0-9]*/);
 	});
+});
+
+test("Start cron job", async () => {
+	await startExchangeRateToHistoryScheduler();
+	expect(startExchangeRateToHistoryScheduler).toBeCalledTimes(1);
 });
