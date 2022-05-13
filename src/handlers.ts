@@ -1,6 +1,6 @@
 import { MessageContext, TextContext } from "./types";
 import { getDateString, getExchangeRates } from "./utils";
-import { getExchangeRateHistory, saveExchangeRate } from "./database";
+import { getExchangeRateHistory } from "./database";
 
 export async function startHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply("Zdravím! Jsem bot, který něco umí 🙃");
@@ -40,7 +40,6 @@ export async function currencyHandler(ctx: TextContext): Promise<void> {
 	await ctx.reply(`*${date.replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency.replaceAll(".", "\\.")}*`, {
 		parse_mode: "MarkdownV2",
 	});
-	await saveExchangeRate(currency);
 }
 
 export async function timeHandler(ctx: TextContext): Promise<void> {
