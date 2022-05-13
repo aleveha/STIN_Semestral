@@ -1,45 +1,44 @@
-import { BOT, DB_CLIENT, STAGE, TELEGRAM_TOKEN } from "./config";
-import {
-	currencyHandler,
-	currencyHistoryHandler,
-	helpHandler,
-	infoHandler,
-	nameHandler,
-	startHandler,
-	timeHandler,
-	wrongMessageHandler,
-} from "./handlers";
-import { startExchangeRateToHistoryScheduler } from "./utils";
+import { Container, ContainerModule } from "inversify";
+import { App } from "./app";
+import { INJECTABLE } from "./types";
+import { IConfigService } from "./config/types";
+import { ConfigService } from "./config";
+import { IDatabaseService } from "./database/types";
+import { DatabaseService } from "./database";
+import { ILoggerService } from "./logger/types";
+import { Logger } from "./logger";
+import { ISharedController } from "./shared/controller/types";
+import { SharedController } from "./shared/controller";
+import { ExchangeRateController } from "./exchangeRate/controller";
+import { IExchangeRateController } from "./exchangeRate/controller/types";
+import { IExchangeRateService } from "./exchangeRate/service/types";
+import { ExchangeRateService } from "./exchangeRate/service";
+import { IExchangeRatePersistence } from "./exchangeRate/persistence/types";
+import { ExchangeRatePersistence } from "./exchangeRate/persistence";
 
-async function registerHandlers(): Promise<void> {
-	BOT.start(async ctx => await startHandler(ctx));
-	BOT.help(async ctx => await helpHandler(ctx));
-	BOT.command("info", async ctx => await infoHandler(ctx));
-	BOT.command("name", async ctx => await nameHandler(ctx));
-	BOT.command("currency", async ctx => await currencyHandler(ctx));
-	BOT.command("currencyHistory", async ctx => await currencyHistoryHandler(ctx));
-	BOT.command("time", async ctx => await timeHandler(ctx));
-	BOT.on("message", async ctx => await wrongMessageHandler(ctx));
-}
+const sharedBindings = new ContainerModule(bind => {
+	bind<App>(INJECTABLE.app).to(App).inSingletonScope();
+	bind<IConfigService>(INJECTABLE.config).to(ConfigService).inSingletonScope();
+	bind<IDatabaseService>(INJECTABLE.databaseService).to(DatabaseService).inSingletonScope();
+	bind<ILoggerService>(INJECTABLE.logger).to(Logger).inSingletonScope();
+	bind<ISharedController>(INJECTABLE.sharedController).to(SharedController);
+});
 
-async function startWebhook(): Promise<void> {
-	await BOT.launch({
-		webhook: {
-			domain: "https://stin-bot.herokuapp.com",
-			hookPath: `/${TELEGRAM_TOKEN}`,
-			host: "0.0.0.0",
-			port: parseInt(process.env.PORT ?? "8443"),
-		},
-	});
-}
+const exchangeRateBindings = new ContainerModule(bind => {
+	bind<IExchangeRateController>(INJECTABLE.exchangeRateController).to(ExchangeRateController);
+	bind<IExchangeRateService>(INJECTABLE.exchangeRateService).to(ExchangeRateService);
+	bind<IExchangeRatePersistence>(INJECTABLE.exchangeRatePersistence).to(ExchangeRatePersistence);
+});
 
 async function main(): Promise<void> {
-	DB_CLIENT.connect().then(() => console.log("Connected to DB"));
-	await registerHandlers();
-	STAGE === "production" ? await startWebhook() : await BOT.launch();
-	console.log(`Bot has been started on stage: ${STAGE}`);
-	await startExchangeRateToHistoryScheduler();
-	console.log("Exchange rate scheduler has been started");
+	const appContainer = new Container();
+	appContainer.load(
+		exchangeRateBindings,
+		sharedBindings,
+	);
+	const app = appContainer.get<App>(INJECTABLE.app);
+	await app.init();
+	await app.start();
 }
 
 main();
