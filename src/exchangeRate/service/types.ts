@@ -36,7 +36,7 @@ export interface IExchangeRateService {
 	/**
 	 * @description Save exchange rate history
 	 */
-	getAndSave(): Promise<boolean>;
+	getDailyExchangeRate(): Promise<boolean>;
 
 	/**
 	 * @description start scheduler to get exchange rate every day
