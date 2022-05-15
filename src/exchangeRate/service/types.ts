@@ -26,7 +26,7 @@ export interface IExchangeRateService {
 	/**
 	 * @description Get latest exchange rate
 	 */
-	get(): Promise<string | null>;
+	get(): Promise<number | null>;
 
 	/**
 	 * @description Get exchange rate history

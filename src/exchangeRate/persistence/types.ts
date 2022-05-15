@@ -13,11 +13,11 @@ export interface IExchangeRatePersistence {
 	 * @param date date of the exchange rate
 	 * @description Add exchange rate to the database
 	 */
-	save(exchangeRate: string, date?: Date): Promise<void>;
+	save(exchangeRate: number, date?: Date): Promise<void>;
 }
 
 export interface ExchangeRateModel {
 	id: number;
-	exchange_rate: string;
+	exchange_rate: number;
 	date: Date;
 }

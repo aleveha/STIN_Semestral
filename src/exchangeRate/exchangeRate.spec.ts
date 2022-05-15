@@ -53,7 +53,7 @@ describe("Exchange rate service", () => {
 			config.get = jest.fn().mockReturnValue("7434040b47b07cf1018f63ee910b5b0a");
 			const exchangeRate = await exchangeRateService.get();
 			expect(exchangeRate).toBeDefined();
-			expect(exchangeRate).toMatch(/\d\d.\d\d/g);
+			expect(exchangeRate?.toString()).toMatch(/\d\d.\d\d/g);
 		});
 	});
 
@@ -67,8 +67,8 @@ describe("Exchange rate service", () => {
 
 		it("Should be successful (not empty array)", async () => {
 			const mockHistory = [
-				{ id: 1, exchange_rate: "24.56", date: "2022-04-28" },
-				{ id: 2, exchange_rate: "24.76", date: "2022-04-29" },
+				{ id: 1, exchange_rate: 24.56, date: "2022-04-28" },
+				{ id: 2, exchange_rate: 24.76, date: "2022-04-29" },
 			];
 			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue(mockHistory);
 			const exchangeRateHistory = await exchangeRateService.history();
@@ -78,7 +78,7 @@ describe("Exchange rate service", () => {
 		});
 	});
 
-	describe("Exchange rate schaduler", () => {
+	describe("Exchange rate scheduler", () => {
 		it("Should be successful (run scheduler)", async () => {
 			const loggerSpy = jest.spyOn(logger, "info");
 			await exchangeRateService.startScheduler();
