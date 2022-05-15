@@ -8,8 +8,14 @@ export class ExchangeRatePersistence implements IExchangeRatePersistence {
 	constructor(@inject(INJECTABLE.databaseService) private readonly databaseService: IDatabaseService) {
 	}
 
-	public async getHistory(): Promise<ExchangeRateModel[]> {
-		return (await this.databaseService.pool.query<ExchangeRateModel>("select * from exchange_rate order by date")).rows as ExchangeRateModel[];
+	public async getHistory(limit?: number): Promise<ExchangeRateModel[]> {
+		const data = !limit ?
+			(await this.databaseService.pool.query<ExchangeRateModel>("select * from exchange_rate order by date")) :
+			(await this.databaseService.pool.query<ExchangeRateModel>(`select *
+                                                                       from exchange_rate
+                                                                       order by date desc
+                                                                       limit ${limit}`));
+		return data.rows as ExchangeRateModel[];
 	}
 
 	public async save(exchangeRate: number, date?: Date): Promise<void> {

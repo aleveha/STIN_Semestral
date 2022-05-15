@@ -5,7 +5,7 @@ export interface IExchangeRatePersistence {
 	/**
 	 * @description Get all exchange rates
 	 */
-	getHistory(): Promise<ExchangeRateModel[]>;
+	getHistory(limit?: number): Promise<ExchangeRateModel[]>;
 
 	/**
 	 *

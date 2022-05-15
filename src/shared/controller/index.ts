@@ -17,6 +17,7 @@ export class SharedController implements ISharedController {
 			"/name — zobrazí moje jméno\n" +
 			"/currency — zobrazuje aktuální kurz eura\n" +
 			"/currencyHistory — zobrazuje historii kurzu eura\n" +
+			"/suggestion — poradí, zda se vyplatí koupit eura\n" +
 			"/time — zobrazí aktuální čas\n";
 		await ctx.reply(helpText);
 	}
