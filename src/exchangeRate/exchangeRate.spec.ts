@@ -100,4 +100,48 @@ describe("Exchange rate service", () => {
 			expect(result).toEqual(false);
 		});
 	});
+
+	describe("Suggestion to buy", () => {
+		it("Should return null (empty history)", async () => {
+			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([]);
+			const suggestion = await exchangeRateService.suggest();
+			expect(suggestion).toBeNull();
+		});
+
+		it("Should return true (rate decrease)", async () => {
+			exchangeRateService.get = jest.fn().mockResolvedValueOnce(27.54);
+			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([
+				{ id: 4, exchange_rate: 24.57, date: "2022-05-01" },
+				{ id: 3, exchange_rate: 24.73, date: "2022-04-30" },
+				{ id: 2, exchange_rate: 24.86, date: "2022-04-29" },
+				{ id: 1, exchange_rate: 24.96, date: "2022-04-28" },
+			]);
+			const suggestion = await exchangeRateService.suggest();
+			expect(suggestion).toHaveProperty("result", true);
+		});
+
+		it("Should return true (rate increase, but <= 10%)", async () => {
+			exchangeRateService.get = jest.fn().mockResolvedValueOnce(27.54);
+			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([
+				{ id: 4, exchange_rate: 24.58, date: "2022-05-01" },
+				{ id: 3, exchange_rate: 24.57, date: "2022-04-30" },
+				{ id: 2, exchange_rate: 24.56, date: "2022-04-29" },
+				{ id: 1, exchange_rate: 24.55, date: "2022-04-28" },
+			]);
+			const suggestion = await exchangeRateService.suggest();
+			expect(suggestion).toHaveProperty("result", true);
+		});
+
+		it("Should return false (rate increase and > 10%)", async () => {
+			exchangeRateService.get = jest.fn().mockResolvedValueOnce(27.54);
+			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([
+				{ id: 4, exchange_rate: 24.98, date: "2022-05-01" },
+				{ id: 3, exchange_rate: 24.57, date: "2022-04-30" },
+				{ id: 2, exchange_rate: 24.16, date: "2022-04-29" },
+				{ id: 1, exchange_rate: 23.35, date: "2022-04-28" },
+			]);
+			const suggestion = await exchangeRateService.suggest();
+			expect(suggestion).toHaveProperty("result", false);
+		});
+	});
 });

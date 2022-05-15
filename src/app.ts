@@ -32,6 +32,7 @@ export class App {
 		this.bot.command("name", async ctx => await this.sharedController.name(ctx));
 		this.bot.command("currency", async ctx => await this.exchangeRateController.get(ctx));
 		this.bot.command("currencyHistory", async ctx => await this.exchangeRateController.history(ctx));
+		this.bot.command("suggestion", async ctx => await this.exchangeRateController.suggest(ctx));
 		this.bot.command("time", async ctx => await this.sharedController.time(ctx));
 		this.bot.on("message", async ctx => await this.sharedController.badRequest(ctx));
 	}

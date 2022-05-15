@@ -1,4 +1,4 @@
-import { ExchangeRate, IExchangeRateService } from "./types";
+import { ExchangeRate, ExchangeRateDifference, IExchangeRateService, Suggestion } from "./types";
 import axios, { AxiosInstance } from "axios";
 import { inject, injectable } from "inversify";
 import { INJECTABLE } from "../../types";
@@ -11,6 +11,7 @@ import "reflect-metadata";
 @injectable()
 export class ExchangeRateService implements IExchangeRateService {
 	private readonly exchangeRateApi: AxiosInstance;
+	private readonly suggestionLimit: number = 3;
 
 	constructor(
 		@inject(INJECTABLE.config) private readonly config: IConfigService,
@@ -65,7 +66,44 @@ export class ExchangeRateService implements IExchangeRateService {
 		this.logger.info("[ExchangeRateService] Exchange rate scheduler has been started");
 	}
 
-	private static async parceExchangeRatesData(data: ExchangeRate): Promise<string | null> {
-		return data.rates ? data.rates.CZK.toFixed(2).toString() : null;
+	private static async parceExchangeRatesData(data: ExchangeRate): Promise<number | null> {
+		return data.rates ? parseFloat(data.rates.CZK.toFixed(2)) : null;
+	}
+
+	public async suggest(): Promise<Suggestion | null> {
+		await this.get();
+		const rates = await this.exchangeRatePersistence.getHistory(this.suggestionLimit + 1);
+		if (rates.length < this.suggestionLimit + 1) {
+			return null;
+		}
+		const current = rates[0].exchange_rate;
+		const history = rates.slice(1);
+		const avg = parseFloat((history.map(elem => elem.exchange_rate).reduce((prev, curr) => prev + curr, 0) / history.length).toFixed(2));
+		const diff = rates.map((elem, index): ExchangeRateDifference | null => {
+			if (index === 0) {
+				return null;
+			}
+			return {
+				dateFrom: rates[index - 1].date,
+				dateTo: elem.date,
+				value: parseFloat((rates[index - 1].exchange_rate - elem.exchange_rate).toFixed(2)),
+			};
+		}).filter((elem): elem is ExchangeRateDifference => elem !== null).reverse();
+		const isDown = history.reverse().every((elem, index) => {
+			if (index === 0) {
+				return true;
+			}
+			return elem.exchange_rate < history[index - 1].exchange_rate;
+		});
+		const avgPercentage = parseFloat((((current - avg) / avg) * 100).toFixed(2));
+		return {
+			avg,
+			avgPercentage,
+			current,
+			diff,
+			diffAvg: parseFloat((current - avg).toFixed(2)),
+			diffAllPercentage: parseFloat((((current - rates[rates.length - 1].exchange_rate) / rates[rates.length - 1].exchange_rate) * 100).toFixed(2)),
+			result: isDown ? isDown : avgPercentage <= 0.1,
+		};
 	}
 }

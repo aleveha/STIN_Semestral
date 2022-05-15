@@ -17,4 +17,11 @@ export interface IExchangeRateController {
 	 * @description get exchange rate history
 	 */
 	history(ctx: TextContext): Promise<void>;
+
+	/**
+	 *
+	 * @param ctx telegram context
+	 * @description suggest currency to buy depending on the current exchange rate
+	 */
+	suggest(ctx: TextContext): Promise<void>;
 }

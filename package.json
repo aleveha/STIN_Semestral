@@ -8,6 +8,7 @@
     "dev": "NODE_ENV=local nodemon src/main.ts",
     "start": "NODE_ENV=production node ./build/main.js",
     "test": "jest",
+    "test cov": "jest --coverage",
     "test-coverage": "jest --coverage"
   },
   "dependencies": {
