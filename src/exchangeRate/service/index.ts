@@ -29,7 +29,15 @@ export class ExchangeRateService implements IExchangeRateService {
 				access_key: this.config.get<string>(CONFIG_KEYS.exchangeToken),
 			},
 		})
-			.then(async res => await ExchangeRateService.parceExchangeRatesData(res.data))
+			.then(async res => {
+				const currency = await ExchangeRateService.parceExchangeRatesData(res.data);
+				if (!currency) {
+					this.logger.error("[ExchangeRateService] Failed to get currency");
+					return null;
+				}
+				await this.exchangeRatePersistence.save(currency);
+				return currency;
+			})
 			.catch(err => {
 				this.logger.error("[ExchangeRateService] Get exchange rates error:\n" + err);
 				return null;
@@ -40,21 +48,20 @@ export class ExchangeRateService implements IExchangeRateService {
 		return await this.exchangeRatePersistence.getHistory();
 	}
 
-	public async getAndSave(): Promise<boolean> {
+	public async getDailyExchangeRate(): Promise<boolean> {
 		const currency = await this.get();
 
 		if (!currency) {
-			this.logger.error("[ExchangeRateService] Failed to get daily currency");
+			this.logger.error("[ExchangeRateService] Daily exchange rate was not saved");
 			return false;
 		}
 
-		await this.exchangeRatePersistence.save(currency);
-		this.logger.info(`[ExchangeRateService] Exchange rate ${currency} saved at ${new Date().toLocaleString("cs")}`);
+		this.logger.info(`[ExchangeRateService] Daily exchange rate ${currency} saved at ${new Date().toLocaleString("cs")}`);
 		return true;
 	}
 
 	public async startScheduler(): Promise<void> {
-		cron.schedule("0 0 * * *", this.getAndSave);
+		cron.schedule("0 0 * * *", this.getDailyExchangeRate);
 		this.logger.info("[ExchangeRateService] Exchange rate scheduler has been started");
 	}
 
