@@ -16,9 +16,7 @@ export class ExchangeRateController implements IExchangeRateController {
 			return;
 		}
 
-		await ctx.reply(`*${new Date().toLocaleString("cs").replaceAll(".", "\\.")}*\nAktuální kurz eura podle ČNB je: *${currency.replaceAll(".", "\\.")}*`, {
-			parse_mode: "MarkdownV2",
-		});
+		await ctx.reply(`*${new Date().toLocaleString("ru")}*\nAktuální kurz eura je: *${currency.toString()}*`, { parse_mode: "Markdown" });
 	}
 
 	public async history(ctx: TextContext): Promise<void> {

@@ -22,7 +22,7 @@ export class ExchangeRateService implements IExchangeRateService {
 		});
 	}
 
-	public async get(): Promise<string | null> {
+	public async get(): Promise<number | null> {
 		return await this.exchangeRateApi.get<ExchangeRate>("/latest", {
 			params: {
 				base: "EUR",

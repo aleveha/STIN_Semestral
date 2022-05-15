@@ -12,7 +12,7 @@ export class ExchangeRatePersistence implements IExchangeRatePersistence {
 		return (await this.databaseService.pool.query<ExchangeRateModel>("select * from exchange_rate order by date")).rows as ExchangeRateModel[];
 	}
 
-	public async save(exchangeRate: string, date?: Date): Promise<void> {
+	public async save(exchangeRate: number, date?: Date): Promise<void> {
 		await this.databaseService.pool.query<ExchangeRateModel>(
 			"insert into exchange_rate(exchange_rate, date) values ($1, $2) on conflict (date) do nothing",
 			[exchangeRate, date ?? new Date()],
