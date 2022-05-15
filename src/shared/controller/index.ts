@@ -24,15 +24,15 @@ export class SharedController implements ISharedController {
 
 	public async info(ctx: TextContext): Promise<void> {
 		const infoText =
-			"*O botě:* Tento bot je součástí semestrálního projektu v rámci předmětu STIN \\(softwarové inženýrství\\) Technické univerzity v Liberci\\.\n\n" +
-			"*Datum vytvoření:* 01\\.04\\.2022\n\n" +
+			"*O botě:* Tento bot je součástí semestrálního projektu v rámci předmětu STIN (softwarové inženýrství) Technické univerzity v Liberci.\n\n" +
+			"*Datum vytvoření:* 01.04.2022\n\n" +
 			"*Autor:* Nikita Tashchilin\n\n";
-		await ctx.reply(infoText, { parse_mode: "MarkdownV2" });
+		await ctx.reply(infoText, { parse_mode: "Markdown" });
 	}
 
 	public async name(ctx: TextContext): Promise<void> {
-		await ctx.reply("Moje jméno je: *Nikita Tashchilin*\\!\n\\.\n\\.\n\\.\n\\.\nDělám si srandu, to je můj táta, jmenuju se *Bot*\\!", {
-			parse_mode: "MarkdownV2",
+		await ctx.reply("Moje jméno je: *Nikita Tashchilin*!\n.\n.\n.\n.\nDělám si srandu, to je můj táta, jmenuju se *Bot*!", {
+			parse_mode: "Markdown",
 		});
 	}
 
@@ -42,9 +42,8 @@ export class SharedController implements ISharedController {
 	}
 
 	public async time(ctx: TextContext): Promise<void> {
-		const date = new Date().toLocaleString("cs");
-		await ctx.reply(`Aktuální čas serveru je: *${date.replaceAll(".", "\\.")}*`, {
-			parse_mode: "MarkdownV2",
+		await ctx.reply(`Aktuální čas serveru je: *${new Date().toLocaleString("ru")}*`, {
+			parse_mode: "Markdown",
 		});
 	}
 }
