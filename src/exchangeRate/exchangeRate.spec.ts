@@ -89,14 +89,14 @@ describe("Exchange rate service", () => {
 		it("Should be successful (inside function)", async () => {
 			config.get = jest.fn().mockReturnValue("7434040b47b07cf1018f63ee910b5b0a");
 			exchangeRatePersistence.save = jest.fn();
-			const result = await exchangeRateService.getAndSave();
+			const result = await exchangeRateService.getDailyExchangeRate();
 			expect(result).toEqual(true);
 		});
 
 		it("Should be failure (inside function)", async () => {
 			config.get = jest.fn().mockReturnValue("123");
 			exchangeRatePersistence.save = jest.fn();
-			const result = await exchangeRateService.getAndSave();
+			const result = await exchangeRateService.getDailyExchangeRate();
 			expect(result).toEqual(false);
 		});
 	});
