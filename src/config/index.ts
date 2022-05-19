@@ -3,6 +3,7 @@ import { inject, injectable } from "inversify";
 import { IConfigService } from "./types";
 import { INJECTABLE } from "../types";
 import { ILoggerService } from "../logger/types";
+import "reflect-metadata";
 
 @injectable()
 export class ConfigService implements IConfigService {
