@@ -53,7 +53,7 @@ describe("Exchange rate service", () => {
 			config.get = jest.fn().mockReturnValue("7434040b47b07cf1018f63ee910b5b0a");
 			const exchangeRate = await exchangeRateService.get();
 			expect(exchangeRate).toBeDefined();
-			expect(exchangeRate?.toString()).toMatch(/\d\d.\d\d/g);
+			expect(exchangeRate?.toString()).toMatch(/\d\d.?\d?\d?/g);
 		});
 	});
 
