@@ -10,6 +10,11 @@ export class ConfigService implements IConfigService {
 	private readonly config: DotenvParseOutput;
 
 	constructor(@inject(INJECTABLE.logger) private readonly logger: ILoggerService) {
+		if (process.env.NODE_ENV === "production") {
+			this.config = process.env as DotenvParseOutput;
+			return;
+		}
+
 		const result: DotenvConfigOutput = config();
 		if (result.error) {
 			this.logger.error("[ConfigService] Error loading .env file");
