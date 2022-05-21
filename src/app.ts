@@ -43,7 +43,7 @@ export class App {
 				domain: "https://stin-bot.herokuapp.com",
 				hookPath: `/${this.config.get<string>(CONFIG_KEYS.telegramToken)}`,
 				host: "0.0.0.0",
-				port: 8443,
+				port: parseInt(process.env.PORT ?? "8443"),
 			},
 		});
 	}
