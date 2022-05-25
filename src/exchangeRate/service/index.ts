@@ -31,7 +31,7 @@ export class ExchangeRateService implements IExchangeRateService {
 			},
 		})
 			.then(async res => {
-				const currency = await ExchangeRateService.parceExchangeRatesData(res.data);
+				const currency = await ExchangeRateService.parseExchangeRatesData(res.data);
 				if (!currency) {
 					this.logger.error("[ExchangeRateService] Failed to get currency");
 					return null;
@@ -66,7 +66,7 @@ export class ExchangeRateService implements IExchangeRateService {
 		this.logger.info("[ExchangeRateService] Exchange rate scheduler has been started");
 	}
 
-	private static async parceExchangeRatesData(data: ExchangeRate): Promise<number | null> {
+	private static async parseExchangeRatesData(data: ExchangeRate): Promise<number | null> {
 		return data.rates ? parseFloat(data.rates.CZK.toFixed(2)) : null;
 	}
 
@@ -103,7 +103,7 @@ export class ExchangeRateService implements IExchangeRateService {
 			diff,
 			diffAvg: parseFloat((current - avg).toFixed(2)),
 			diffAllPercentage: parseFloat((((current - rates[rates.length - 1].exchange_rate) / rates[rates.length - 1].exchange_rate) * 100).toFixed(2)),
-			result: isDown ? isDown : avgPercentage <= 0.1,
+			result: isDown ? isDown : avgPercentage <= 10,
 		};
 	}
 }
