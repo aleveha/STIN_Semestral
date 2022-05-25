@@ -121,7 +121,7 @@ describe("Exchange rate service", () => {
 		});
 
 		it("Should return true (rate increase, but <= 10%)", async () => {
-			exchangeRateService.get = jest.fn().mockResolvedValueOnce(27.54);
+			exchangeRateService.get = jest.fn().mockResolvedValueOnce(25.54);
 			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([
 				{ id: 4, exchange_rate: 24.58, date: "2022-05-01" },
 				{ id: 3, exchange_rate: 24.57, date: "2022-04-30" },
@@ -133,7 +133,7 @@ describe("Exchange rate service", () => {
 		});
 
 		it("Should return false (rate increase and > 10%)", async () => {
-			exchangeRateService.get = jest.fn().mockResolvedValueOnce(27.54);
+			exchangeRateService.get = jest.fn().mockResolvedValueOnce(37.54);
 			exchangeRatePersistence.getHistory = jest.fn().mockReturnValue([
 				{ id: 4, exchange_rate: 24.98, date: "2022-05-01" },
 				{ id: 3, exchange_rate: 24.57, date: "2022-04-30" },

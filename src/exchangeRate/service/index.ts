@@ -71,12 +71,14 @@ export class ExchangeRateService implements IExchangeRateService {
 	}
 
 	public async suggest(): Promise<Suggestion | null> {
-		await this.get();
+		const current = await this.get();
+		if (!current) {
+			return null;
+		}
 		const rates = await this.exchangeRatePersistence.getHistory(this.suggestionLimit + 1);
 		if (rates.length < this.suggestionLimit + 1) {
 			return null;
 		}
-		const current = rates[0].exchange_rate;
 		const history = rates.slice(1);
 		const avg = parseFloat((history.map(elem => elem.exchange_rate).reduce((prev, curr) => prev + curr, 0) / history.length).toFixed(2));
 		const diff = rates.map((elem, index): ExchangeRateDifference | null => {
